@@ -74,17 +74,17 @@ style = "bold yellow"
 # Terraform (no workspace)
 # ==================================================
 [terraform]
-symbol = ""
+symbol = "󱁢 "
 style = "bold lavender"
-format = "via [TF $version]($style) "
+format = "via [$symbol$version]($style) "
 
 # ==================================================
 # AWS
 # ==================================================
 [aws]
-symbol = ""
+symbol = "☁️ "
 style = "bold peach"
-format = 'on [AWS $profile( \($region\))]($style) '
+format = 'on [$symbol($profile)]($style)[( \($region\))](overlay1) '
 disabled = false
 
 [aws.profile_aliases]
@@ -98,9 +98,9 @@ triffy   = "Triffy"
 # Azure
 # ==================================================
 [azure]
-symbol = ""
+symbol = "⚡ "
 style = "bold blue"
-format = "on [AZ $subscription]($style) "
+format = "on [$symbol($subscription)]($style) "
 disabled = false
 
 [azure.subscription_aliases]
@@ -110,67 +110,68 @@ NonProduction = 'Non Production'
 # GCP
 # ==================================================
 [gcloud]
-symbol = ""
+symbol = "☁️ "
 style = "bold sky"
-format = 'on [GCP $project( \($region\))]($style) '
+format = 'on [$symbol($project)]($style)[( \($region\))](overlay1) '
 disabled = false
 
 # ==================================================
 # Kubernetes (K8s)
 # ==================================================
 [kubernetes]
-symbol = ""
+symbol = "☸ "
 style = "bold green"
-format = 'on [K8s $context( \($namespace\))]($style) '
+format = 'on [$symbol($context)]($style)[( \($namespace\))](overlay1) '
 disabled = false
 
 # ==================================================
 # Docker
 # ==================================================
 [docker_context]
-symbol = ""
+symbol = " "
 style = "bold sapphire"
-format = "via [DK $context]($style) "
+format = "via [$symbol$context]($style) "
 
 # ==================================================
 # Go
 # ==================================================
 [golang]
-symbol = ""
+symbol = "🐹 "
 style = "bold sapphire"
-format = "via [GO $version]($style) "
+format = "via [$symbol$version]($style) "
 
 # ==================================================
 # Python
 # ==================================================
 [python]
-symbol = ""
+symbol = "🐍 "
 style = "bold yellow"
-format = "via [PY $version]($style) "
+format = "via [$symbol$version]($style) "
 
 # ==================================================
 # Java
 # ==================================================
 [java]
-symbol = ""
+symbol = "☕ "
 style = "bold red"
-format = "via [JV $version]($style) "
+format = "via [$symbol$version]($style) "
 
 # ==================================================
 # Node.js
 # ==================================================
 [nodejs]
-symbol = ""
+symbol = "🟢 "
 style = "bold green"
-format = "via [JS $version]($style) "
+format = "via [$symbol$version]($style) "
 
 # ==================================================
 # Command status (errors)
 # ==================================================
 [status]
+symbol = "✘"
 disabled = false
 style = "bold red"
-format = "[ERR $status]($style) "
+format = "[$symbol $status]($style) "
 
 # ==================================================
 # Time
@@ -178,6 +179,6 @@ format = "[ERR $status]($style) "
 [time]
 disabled = false
 style = "bold overlay1"
-format = "[$time]($style) "
+format = "🕔 [$time]($style) "
 time_format = "%H:%M"
 
