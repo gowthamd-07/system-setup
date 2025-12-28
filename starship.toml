@@ -1,0 +1,183 @@
+# ==================================================
+# General
+# ==================================================
+add_newline = false
+command_timeout = 1000
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$terraform\
+$aws\
+$azure\
+$gcloud\
+$kubernetes\
+$docker_context\
+$golang\
+$python\
+$java\
+$nodejs\
+$status\
+$time\
+$character
+"""
+
+palette = "catppuccin_mocha"
+
+# ==================================================
+# Catppuccin Mocha Palette
+# ==================================================
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+overlay1  = "#7f849c"
+
+# ==================================================
+# Prompt Character (command on new line)
+# ==================================================
+[character]
+success_symbol = "\n➜ "
+error_symbol   = "\n➜ "
+
+# ==================================================
+# Directory
+# ==================================================
+[directory]
+style = "bold sapphire"
+truncate_to_repo = true
+
+# ==================================================
+# Git
+# ==================================================
+[git_branch]
+symbol = " "
+style = "bold mauve"
+format = "[$symbol($branch)]($style) "
+
+[git_status]
+style = "bold yellow"
+
+# ==================================================
+# Terraform (no workspace)
+# ==================================================
+[terraform]
+symbol = ""
+style = "bold lavender"
+format = "via [TF $version]($style) "
+
+# ==================================================
+# AWS
+# ==================================================
+[aws]
+symbol = ""
+style = "bold peach"
+format = 'on [AWS $profile( \($region\))]($style) '
+disabled = false
+
+[aws.profile_aliases]
+default  = "Default"
+viome    = "Viome"
+invictus = "Invictus"
+yaary    = "Yaary"
+triffy   = "Triffy"
+
+# ==================================================
+# Azure
+# ==================================================
+[azure]
+symbol = ""
+style = "bold blue"
+format = "on [AZ $subscription]($style) "
+disabled = false
+
+[azure.subscription_aliases]
+NonProduction = 'Non Production'
+
+# ==================================================
+# GCP
+# ==================================================
+[gcloud]
+symbol = ""
+style = "bold sky"
+format = 'on [GCP $project( \($region\))]($style) '
+disabled = false
+
+# ==================================================
+# Kubernetes (K8s)
+# ==================================================
+[kubernetes]
+symbol = ""
+style = "bold green"
+format = 'on [K8s $context( \($namespace\))]($style) '
+disabled = false
+
+# ==================================================
+# Docker
+# ==================================================
+[docker_context]
+symbol = ""
+style = "bold sapphire"
+format = "via [DK $context]($style) "
+
+# ==================================================
+# Go
+# ==================================================
+[golang]
+symbol = ""
+style = "bold sapphire"
+format = "via [GO $version]($style) "
+
+# ==================================================
+# Python
+# ==================================================
+[python]
+symbol = ""
+style = "bold yellow"
+format = "via [PY $version]($style) "
+
+# ==================================================
+# Java
+# ==================================================
+[java]
+symbol = ""
+style = "bold red"
+format = "via [JV $version]($style) "
+
+# ==================================================
+# Node.js
+# ==================================================
+[nodejs]
+symbol = ""
+style = "bold green"
+format = "via [JS $version]($style) "
+
+# ==================================================
+# Command status (errors)
+# ==================================================
+[status]
+disabled = false
+style = "bold red"
+format = "[ERR $status]($style) "
+
+# ==================================================
+# Time
+# ==================================================
+[time]
+disabled = false
+style = "bold overlay1"
+format = "[$time]($style) "
+time_format = "%H:%M"
+

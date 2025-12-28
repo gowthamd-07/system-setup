@@ -1,0 +1,426 @@
+================================================================================
+DEVOPS TOOLS INSTALLATION PLAN
+================================================================================
+Based on analysis of k8s-alias.sh and related configuration files
+
+================================================================================
+1. CORE KUBERNETES TOOLS
+================================================================================
+
+1.1 kubectl (Kubernetes CLI)
+    - Purpose: Primary Kubernetes command-line tool
+    - Installation (macOS):
+      brew install kubectl
+    - Installation (Linux):
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    - Verification: kubectl version --client
+
+1.2 kubecolor
+    - Purpose: Colored kubectl output wrapper
+    - Installation:
+      brew install kubecolor
+    - Alternative: go install github.com/hidetatz/kubecolor/cmd/kubecolor@latest
+    - Note: k8s-alias.sh wraps kubectl to use kubecolor automatically
+
+1.3 kubectl-ai
+    - Purpose: Clean YAML output by removing unnecessary fields
+    - Installation:
+      brew install kubectl-ai
+    - Alternative: 
+      kubectl krew install neat
+    - Usage: Used in kyaml() and ky() functions
+
+1.4 kubectl-ai
+    - Purpose: Clean YAML output by removing unnecessary fields
+    - Installation:
+      kubectl krew install neat
+    - Usage: Used in kyaml() and ky() functions
+
+================================================================================
+2. KUBERNETES CONTEXT & NAMESPACE MANAGEMENT
+================================================================================
+
+2.1 kubectx (kubectl-ctx)
+    - Purpose: Fast context switching for kubectl
+    - Installation:
+      brew install kubectx
+    - Alternative:
+      git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
+      COMPDIR=$(pkg-config --variable=completionsdir bash-completion 2>/dev/null) || COMPDIR=/usr/local/etc/bash_completion.d
+      sudo ln -sf ~/.kubectx/kubectx $COMPDIR/kubectx
+      sudo ln -sf ~/.kubectx/kubens $COMPDIR/kubens
+    - Note: Used in kc() function
+
+2.2 kubens
+    - Purpose: Fast namespace switching for kubectl
+    - Installation:
+      brew install kubens
+    - Alternative: Included with kubectx installation above
+    - Note: Used in kn alias
+
+2.3 kubech
+    - Purpose: Per-shell/terminal kubectl context and namespace management
+    - Source: https://github.com/DevOpsHiveHQ/kubech
+    - Installation: Auto-downloaded by k8s-alias.sh
+    - Manual installation:
+      curl -fsSL "https://raw.githubusercontent.com/DevOpsHiveHQ/kubech/master/kubech" > ~/.kube/kubech
+      chmod +x ~/.kube/kubech
+    - Note: Used in x alias for interactive context switching
+
+================================================================================
+3. KUBERNETES ALIASES & ENHANCEMENTS
+================================================================================
+
+3.1 kubectl-aliases
+    - Purpose: Comprehensive collection of kubectl aliases
+    - Source: https://github.com/ahmetb/kubectl-aliases
+    - Installation: Auto-downloaded by k8s-alias.sh
+    - Manual installation:
+      curl -fsSL "https://raw.githubusercontent.com/ahmetb/kubectl-aliases/master/.kubectl_aliases" > ~/.kube/aliases.sh
+      source ~/.kube/aliases.sh
+    - Note: Provides hundreds of useful kubectl shortcuts
+
+================================================================================
+4. UTILITY TOOLS
+================================================================================
+
+4.1 fzf (Fuzzy Finder)
+    - Purpose: Interactive command-line fuzzy finder used in multiple functions
+    - Installation:
+      brew install fzf
+    - Post-installation:
+      $(brew --prefix)/opt/fzf/install
+    - Usage: Used in kei(), ksd(), kdr(), kdy(), ky(), kc(), x functions
+    - Note: Essential for interactive selection in k8s-alias.sh
+
+4.2 jq
+    - Purpose: JSON processor for parsing kubectl JSON output
+    - Installation:
+      brew install jq
+    - Usage: Used in ksd() function to decode base64 secrets
+    - Verification: jq --version
+
+4.3 yq
+    - Purpose: YAML processor for parsing kubectl config
+    - Installation:
+      brew install yq
+    - Alternative: 
+      brew install python-yq
+    - Usage: Used in kc() function to parse .kube/config
+    - Verification: yq --version
+
+4.4 stern
+    - Purpose: Multi-pod and multi-container log tailing for Kubernetes
+    - Installation:
+      brew install stern
+    - Alternative:
+      go install github.com/stern/stern@latest
+    - Usage: Used in l and ln aliases for log tailing
+    - Note: Configured to exclude istio-proxy and istio-init logs
+
+4.5 curl
+    - Purpose: Download scripts and tools
+    - Installation: Usually pre-installed on macOS/Linux
+    - Verification: curl --version
+
+================================================================================
+5. CLOUD PROVIDER CLIs
+================================================================================
+
+5.1 AWS CLI
+    - Purpose: Amazon Web Services command-line interface
+    - Installation:
+      brew install awscli
+    - Configuration:
+      aws configure
+    - Note: Referenced in starship.toml for AWS profile display
+
+5.2 Azure CLI
+    - Purpose: Microsoft Azure command-line interface
+    - Installation:
+      brew install azure-cli
+    - Login:
+      az login
+    - Note: Referenced in starship.toml for Azure subscription display
+
+5.3 Google Cloud SDK (gcloud)
+    - Purpose: Google Cloud Platform command-line interface
+    - Installation:
+      brew install google-cloud-sdk
+    - Initialization:
+      gcloud init
+    - Note: Referenced in starship.toml for GCP project display
+
+================================================================================
+6. CONTAINER & ORCHESTRATION TOOLS
+================================================================================
+
+6.1 Docker
+    - Purpose: Container runtime and management
+    - Installation (macOS):
+      brew install --cask docker
+    - Installation (Linux):
+      Follow Docker Engine installation guide for your distribution
+    - Verification: docker --version
+    - Note: Referenced in starship.toml for Docker context display
+
+6.2 Helm
+    - Purpose: Kubernetes package manager
+    - Installation:
+      brew install helm
+    - Alternative:
+      curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    - Verification: helm version
+    - Note: Used in Kubernetes application deployments
+
+6.3 Kind (Kubernetes in Docker)
+    - Purpose: Local Kubernetes cluster using Docker containers
+    - Installation:
+      brew install kind
+    - Alternative:
+      curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+      chmod +x ./kind
+      sudo mv ./kind /usr/local/bin/kind
+    - Verification: kind version
+    - Note: Configuration file exists at DevOps/Kubernetes/kind/kind.yml
+
+================================================================================
+7. SERVICE MESH & GITOPS TOOLS
+================================================================================
+
+7.1 Istio
+    - Purpose: Service mesh for Kubernetes
+    - Installation:
+      curl -L https://istio.io/downloadIstio | sh -
+      cd istio-<version>
+      export PATH=$PWD/bin:$PATH
+      istioctl install --set profile=default -y
+    - Note: Referenced in k8s-alias.sh for log filtering (istio-proxy, istio-init)
+
+7.2 ArgoCD
+    - Purpose: GitOps continuous delivery tool for Kubernetes
+    - Installation (via kubectl):
+      kubectl create namespace argocd
+      kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    - Note: Configuration files exist in DevOps/Kubernetes/application/k8s/argocd/
+
+7.3 Argo Rollouts
+    - Purpose: Progressive delivery for Kubernetes
+    - Installation:
+      kubectl create namespace argo-rollouts
+      kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+    - Note: Configuration files exist in DevOps/Kubernetes/application/k8s/argocd/
+
+================================================================================
+8. DEVELOPMENT TOOLS
+================================================================================
+
+8.1 Go (Golang)
+    - Purpose: Programming language (used in some Kubernetes projects)
+    - Installation:
+      brew install go
+    - Verification: go version
+    - Note: Referenced in starship.toml
+
+8.2 Python
+    - Purpose: Programming language and scripting
+    - Installation:
+      brew install python@3.11
+    - Verification: python3 --version
+    - Note: Referenced in starship.toml
+
+8.3 Java
+    - Purpose: Programming language
+    - Installation:
+      brew install openjdk@17
+    - Verification: java --version
+    - Note: Referenced in starship.toml
+
+8.4 Node.js
+    - Purpose: JavaScript runtime
+    - Installation:
+      brew install node
+    - Verification: node --version
+    - Note: Referenced in starship.toml
+
+8.5 Terraform
+    - Purpose: Infrastructure as Code tool
+    - Installation:
+      brew install terraform
+    - Verification: terraform version
+    - Note: Referenced in starship.toml
+
+================================================================================
+9. SHELL ENHANCEMENTS
+================================================================================
+
+9.1 Starship Prompt
+    - Purpose: Cross-shell prompt with Kubernetes context display
+    - Installation:
+      brew install starship
+    - Configuration:
+      echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+      cp DevOps/system-setup/starship.toml ~/.config/starship.toml
+    - Features: Shows K8s context, namespace, AWS profile, GCP project, etc.
+    - Note: Configuration file exists at DevOps/system-setup/starship.toml
+
+9.2 Zsh (if not default)
+    - Purpose: Enhanced shell with better features
+    - Installation:
+      brew install zsh
+    - Make default:
+      chsh -s $(which zsh)
+    - Note: k8s-alias.sh is designed for bash/zsh
+
+9.3 Oh My Zsh (Optional)
+    - Purpose: Zsh framework with plugins
+    - Installation:
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    - Useful plugins:
+      - kubectl
+      - docker
+      - aws
+      - terraform
+
+================================================================================
+10. SYSTEM CONFIGURATION
+================================================================================
+
+10.1 macOS Keyboard Settings
+    - Purpose: Faster keyboard repeat rate
+    - Configuration (via mac-setup.sh):
+      defaults write -g InitialKeyRepeat -float 10.0
+      defaults write -g KeyRepeat -float 1.0
+    - Note: File exists at DevOps/system-setup/mac-setup.sh
+
+10.2 Shell Configuration
+    - Add k8s-alias.sh to shell rc file:
+      echo 'source ~/Documents/Personal/DevOps/system-setup/k8s-alias.sh' >> ~/.zshrc
+      # or for bash:
+      echo 'source ~/Documents/Personal/DevOps/system-setup/k8s-alias.sh' >> ~/.bashrc
+    - Reload shell:
+      source ~/.zshrc  # or source ~/.bashrc
+
+10.3 Create .kube directory
+    - mkdir -p ~/.kube
+    - Ensure kubectl config exists:
+      kubectl config view
+
+================================================================================
+11. INSTALLATION ORDER (RECOMMENDED)
+================================================================================
+
+Phase 1 - Core Tools:
+  1. Install Homebrew (if on macOS): /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  2. Install kubectl
+  3. Install kubecolor
+  4. Install fzf
+  5. Install jq and yq
+
+Phase 2 - Kubernetes Enhancements:
+  6. Install kubectx and kubens
+  7. Install kubectl-neat
+  8. Install stern
+  9. Run k8s-alias.sh (will auto-download kubectl-aliases and kubech)
+
+Phase 3 - Cloud Tools:
+  10. Install AWS CLI
+  11. Install Azure CLI
+  12. Install Google Cloud SDK
+
+Phase 4 - Container Tools:
+  13. Install Docker
+  14. Install Helm
+  15. Install Kind
+
+Phase 5 - Shell & UI:
+  16. Install Starship
+  17. Configure starship.toml
+  18. Source k8s-alias.sh in shell rc
+
+Phase 6 - Development Tools (as needed):
+  19. Install Go, Python, Java, Node.js
+  20. Install Terraform
+
+Phase 7 - Advanced Tools (as needed):
+  21. Install Istio
+  22. Install ArgoCD (in cluster)
+  23. Install Argo Rollouts (in cluster)
+
+================================================================================
+12. VERIFICATION CHECKLIST
+================================================================================
+
+After installation, verify each tool:
+  [ ] kubectl version --client
+  [ ] kubecolor version
+  [ ] kubectl-ctx --version
+  [ ] kubens --version
+  [ ] fzf --version
+  [ ] jq --version
+  [ ] yq --version
+  [ ] stern --version
+  [ ] aws --version
+  [ ] az --version
+  [ ] gcloud --version
+  [ ] docker --version
+  [ ] helm version
+  [ ] kind version
+  [ ] starship --version
+  [ ] Test k8s-alias.sh functions: k, kc, kn, kei, ksd, etc.
+
+================================================================================
+13. TROUBLESHOOTING
+================================================================================
+
+Common Issues:
+
+1. kubectl-ctx/kubens not found:
+   - Ensure kubectx is installed: brew install kubectx
+   - Check PATH includes /usr/local/bin or ~/.local/bin
+
+2. fzf not working in functions:
+   - Run: $(brew --prefix)/opt/fzf/install
+   - Ensure fzf is in PATH
+
+3. kubectl-neat not found:
+   - Install via: brew install kubectl-neat
+   - Or via krew: kubectl krew install neat
+
+4. yq parsing errors:
+   - Ensure correct yq version: brew install yq (not python-yq)
+   - Check yq version: yq --version
+
+5. kubecolor not coloring output:
+   - Verify kubecolor is installed: which kubecolor
+   - Check kubectl wrapper function in k8s-alias.sh
+
+6. stern not found:
+   - Install: brew install stern
+   - Or via Go: go install github.com/stern/stern@latest
+
+7. Shell functions not available:
+   - Source k8s-alias.sh: source ~/Documents/Personal/DevOps/system-setup/k8s-alias.sh
+   - Add to ~/.zshrc or ~/.bashrc
+
+================================================================================
+14. ADDITIONAL RESOURCES
+================================================================================
+
+Documentation:
+  - kubectl-aliases: https://github.com/ahmetb/kubectl-aliases
+  - kubectx: https://github.com/ahmetb/kubectx
+  - kubech: https://github.com/DevOpsHiveHQ/kubech
+  - kubecolor: https://github.com/hidetatz/kubecolor
+  - stern: https://github.com/stern/stern
+  - starship: https://starship.rs
+
+Cheatsheets:
+  - k8s-alias-cheatsheet.md (in same directory)
+  - kubectl-aliases-cheatsheet.md (in same directory)
+
+================================================================================
+END OF SETUP PLAN
+================================================================================
+
