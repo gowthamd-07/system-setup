@@ -1,0 +1,29 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kind-node-local-storage
+
+nodes:
+  - role: control-plane
+    extraMounts:
+      - hostPath: /Users/gowthamd/Documents/Personal/DevOps/Kubernetes/kind/storage
+        containerPath: /mnt/local-storage
+
+  - role: worker
+    extraMounts:
+      - hostPath: /Users/gowthamd/Documents/Personal/DevOps/Kubernetes/kind/storage
+        containerPath: /mnt/local-storage
+
+  - role: worker
+    extraMounts:
+      - hostPath: /Users/gowthamd/Documents/Personal/DevOps/Kubernetes/kind/storage
+        containerPath: /mnt/local-storage
+
+  - role: worker
+    extraMounts:
+      - hostPath: /Users/gowthamd/Documents/Personal/DevOps/Kubernetes/kind/storage
+        containerPath: /mnt/local-storage
+
+  - role: worker
+    extraMounts:
+      - hostPath: /Users/gowthamd/Documents/Personal/DevOps/Kubernetes/kind/storage
+        containerPath: /mnt/local-storage
